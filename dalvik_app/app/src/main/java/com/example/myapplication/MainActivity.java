@@ -2,7 +2,7 @@ package com.example.myapplication;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,13 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.android.volley.toolbox.HttpResponse;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +23,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         HttpResponse response = null;
         AsyncTask<String, Void, String> result = new HttpGetRequest().execute("https://botpot.openwaf.de/avi-groups/Dalvik-automation");
-
+        TextView textView = (TextView)findViewById(R.id.textBox);
+        try {
+            textView.setText(result.get());
+        } catch (ExecutionException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

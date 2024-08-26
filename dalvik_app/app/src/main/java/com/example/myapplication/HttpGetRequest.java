@@ -7,7 +7,6 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -29,6 +28,8 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
         String stringUrl = params[0];
         String result;
         String inputLine;
+        int rc = 0;
+        String msg = "";
         try {
             //Create a URL object holding our url
 
@@ -68,6 +69,8 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
             //Create a new InputStreamReader
             InputStreamReader streamReader = new
                     InputStreamReader(connection.getInputStream());
+            rc = connection.getResponseCode();
+            msg = connection.getResponseMessage();
             //Create a new buffered reader and String Builder
             BufferedReader reader = new BufferedReader(streamReader);
             StringBuilder stringBuilder = new StringBuilder();
@@ -83,7 +86,7 @@ public class HttpGetRequest extends AsyncTask<String, Void, String> {
         } catch (IOException | NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
         }
-            Log.d("Atharva", "doInBackground: " + result);
-        return result;
+        Log.d("Status code:", "doInBackground: " + String.valueOf(rc));
+        return String.valueOf(rc) + " " + result;
     }
 }
